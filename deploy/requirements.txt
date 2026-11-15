@@ -1,0 +1,8 @@
+# 仅安装 CIFAR-10-C 运行链所需的 Python 包
+--extra-index-url https://download.pytorch.org/whl/cu117
+torch==1.13.1+cu117
+torchvision==0.14.1+cu117
+timm==0.6.13
+Pillow==9.5.0
+PyYAML==6.0.1
+tqdm==4.66.4

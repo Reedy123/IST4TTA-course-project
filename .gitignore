@@ -1,13 +1,32 @@
-*__pycache__/
-
-others/
-results/
+# 数据、权重与下载文件不进入协作提交
 data/
-!data/ModelZoo/
-
-*.jpg
-*.png
-*.txt
-*.log
+datasets/
+downloads/
+*.npy
+*.pt
 *.pth
-!requirements.txt
+*.ckpt
+*.tar
+*.gz
+*.zip
+*.part
+# 独立环境、部署记录与结果
+runtime/
+.env/
+.venv/
+venv/
+env-ist*/
+deployment-record/
+results*/
+__pycache__/
+*.pyc
+.DS_Store
+# 凭据与本地配置
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+credentials*
+secrets*

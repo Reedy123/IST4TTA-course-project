@@ -1,0 +1,207 @@
+[
+  {
+    "source": "pytorch/faiss-gpu",
+    "file": {
+      "description": null,
+      "dependencies": [],
+      "distribution_type": "conda",
+      "basename": "linux-64/faiss-gpu-1.7.4-py3.10_hc0239a3_0_cuda11.4.tar.bz2",
+      "attrs": {
+        "build_number": 0,
+        "license": "MIT",
+        "has_prefix": false,
+        "license_family": "MIT",
+        "machine": "x86_64",
+        "platform": "linux",
+        "depends": [
+          "__glibc >=2.17,<3.0.a0",
+          "libfaiss 1.7.4 h13c3c6d_0_cuda11.4",
+          "libgcc-ng >=11.2.0",
+          "libstdcxx-ng >=11.2.0",
+          "numpy >=1.16,<2",
+          "python >=3.10,<3.11.0a0"
+        ],
+        "build": "py3.10_hc0239a3_0_cuda11.4",
+        "timestamp": 1682009501971,
+        "arch": "x86_64",
+        "operatingsystem": "linux",
+        "target-triplet": "x86_64-any-linux",
+        "subdir": "linux-64"
+      },
+      "upload_time": "2023-04-20 17:31:31.517000+00:00",
+      "md5": "705e18f2376002805f460cc942953270",
+      "sha256": "1f4a0e81a79c0046d5da24c833d8e69f66a0e553235639b2312854be23f7aac1",
+      "size": 3298830,
+      "full_name": "pytorch/faiss-gpu/1.7.4/linux-64/faiss-gpu-1.7.4-py3.10_hc0239a3_0_cuda11.4.tar.bz2",
+      "download_url": "//conda.anaconda.org/pytorch/linux-64/faiss-gpu-1.7.4-py3.10_hc0239a3_0_cuda11.4.tar.bz2",
+      "type": "conda",
+      "version": "1.7.4",
+      "ndownloads": 10056,
+      "owner": "pytorch",
+      "labels": [
+        "main"
+      ]
+    }
+  },
+  {
+    "source": "pytorch/libfaiss",
+    "file": {
+      "description": null,
+      "dependencies": [],
+      "distribution_type": "conda",
+      "basename": "linux-64/libfaiss-1.7.4-h13c3c6d_0_cuda11.4.tar.bz2",
+      "attrs": {
+        "build_number": 0,
+        "license": "MIT",
+        "has_prefix": false,
+        "license_family": "MIT",
+        "machine": "x86_64",
+        "platform": "linux",
+        "depends": [
+          "__glibc >=2.17,<3.0.a0",
+          "cudatoolkit >=11.4.1,<11.5.0a0",
+          "libgcc-ng >=11.2.0",
+          "libstdcxx-ng >=11.2.0",
+          "mkl >=2021"
+        ],
+        "build": "h13c3c6d_0_cuda11.4",
+        "timestamp": 1682008323067,
+        "arch": "x86_64",
+        "operatingsystem": "linux",
+        "target-triplet": "x86_64-any-linux",
+        "subdir": "linux-64"
+      },
+      "upload_time": "2023-04-20 17:31:10.562000+00:00",
+      "md5": "908a9755a542bb1066b35b410217ab05",
+      "sha256": "cb79d684f261e4a146aa25ad277b89348cc54d9244c87d3623e92efa0108339f",
+      "size": 548630339,
+      "full_name": "pytorch/libfaiss/1.7.4/linux-64/libfaiss-1.7.4-h13c3c6d_0_cuda11.4.tar.bz2",
+      "download_url": "//conda.anaconda.org/pytorch/linux-64/libfaiss-1.7.4-h13c3c6d_0_cuda11.4.tar.bz2",
+      "type": "conda",
+      "version": "1.7.4",
+      "ndownloads": 16497,
+      "owner": "pytorch",
+      "labels": [
+        "main"
+      ]
+    }
+  },
+  {
+    "source": "nvidia/cudatoolkit",
+    "file": {
+      "description": null,
+      "dependencies": {
+        "depends": [
+          {
+            "name": "__glibc",
+            "specs": [
+              [
+                ">=",
+                "2.17,<3.0.a0"
+              ]
+            ]
+          },
+          {
+            "name": "libgcc-ng",
+            "specs": [
+              [
+                ">=",
+                "9.3.0"
+              ]
+            ]
+          },
+          {
+            "name": "libstdcxx-ng",
+            "specs": [
+              [
+                ">=",
+                "9.3.0"
+              ]
+            ]
+          }
+        ]
+      },
+      "distribution_type": "conda",
+      "basename": "linux-64/cudatoolkit-11.4.1-h8ab8bb3_9.tar.bz2",
+      "attrs": {
+        "build_number": 9,
+        "license": "LicenseRef-NVIDIA-End-User-License-Agreement",
+        "has_prefix": false,
+        "machine": "x86_64",
+        "platform": "linux",
+        "depends": [
+          "__glibc >=2.17,<3.0.a0",
+          "libgcc-ng >=9.3.0",
+          "libstdcxx-ng >=9.3.0"
+        ],
+        "build": "h8ab8bb3_9",
+        "timestamp": 1628705312735,
+        "arch": "x86_64",
+        "operatingsystem": "linux",
+        "target-triplet": "x86_64-any-linux",
+        "subdir": "linux-64"
+      },
+      "upload_time": "2021-08-11 18:23:16.883000+00:00",
+      "md5": "a9fa9dac98fe0bfbbc7c82beea21cf56",
+      "sha256": "",
+      "size": 1033928926,
+      "full_name": "nvidia/cudatoolkit/11.4.1/linux-64/cudatoolkit-11.4.1-h8ab8bb3_9.tar.bz2",
+      "download_url": "//conda.anaconda.org/nvidia/linux-64/cudatoolkit-11.4.1-h8ab8bb3_9.tar.bz2",
+      "type": "conda",
+      "version": "11.4.1",
+      "ndownloads": 76164,
+      "owner": "nvidia",
+      "labels": [
+        "main",
+        "testing"
+      ]
+    }
+  },
+  {
+    "source": "anaconda/mkl",
+    "file": {
+      "description": null,
+      "dependencies": [],
+      "distribution_type": "conda",
+      "basename": "linux-64/mkl-2023.1.0-h213fc3f_46344.conda",
+      "attrs": {
+        "build": "h213fc3f_46344",
+        "build_number": 46344,
+        "constrains": [
+          "__glibc >=2.17"
+        ],
+        "depends": [
+          "intel-openmp 2023.*",
+          "libgcc-ng >=11.2.0",
+          "libstdcxx-ng >=11.2.0",
+          "tbb 2021.*"
+        ],
+        "license": "LicenseRef-ProprietaryIntel",
+        "license_family": "Proprietary",
+        "md5": "83e5adf5b75242d8d7634615fed37c72",
+        "name": "mkl",
+        "sha256": "74453e0d9e072ef8e60e48a734380c238f9df2cf0191ad9a2db6dbf9f8391034",
+        "size": 179871206,
+        "subdir": "linux-64",
+        "timestamp": 1699648006088,
+        "version": "2023.1.0",
+        "source_url": "https://repo.anaconda.com/pkgs/main/linux-64/mkl-2023.1.0-h213fc3f_46344.conda",
+        "platform": "linux",
+        "arch": "x86_64"
+      },
+      "upload_time": "2026-08-31 21:39:16.976000+00:00",
+      "md5": "83e5adf5b75242d8d7634615fed37c72",
+      "sha256": "74453e0d9e072ef8e60e48a734380c238f9df2cf0191ad9a2db6dbf9f8391034",
+      "size": 179871206,
+      "full_name": "anaconda/mkl/2023.1.0/linux-64/mkl-2023.1.0-h213fc3f_46344.conda",
+      "download_url": "//conda.anaconda.org/anaconda/linux-64/mkl-2023.1.0-h213fc3f_46344.conda",
+      "type": "conda",
+      "version": "2023.1.0",
+      "ndownloads": 15329,
+      "owner": "anaconda",
+      "labels": [
+        "main"
+      ]
+    }
+  }
+]

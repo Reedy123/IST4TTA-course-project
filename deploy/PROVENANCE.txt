@@ -1,0 +1,8 @@
+用途：记录官方源码及权重版本，供部署核验。
+官方仓库：https://github.com/JingInAI/IST4TTA
+commit：03ba8e716f9bb6e0a586718f8836362b7090692b
+提交时间：2024-06-15T21:21:39+08:00
+权重：data/ModelZoo/Hendrycks2020AugMixWRN.pt
+SHA256：a39f020c48b3bad58df794b5d3a286724f00b9f026ee22d0e6d1710748599e82
+检查日期：2026-11-15
+状态：仅源码和发布元数据检查；未安装、未上机验证、未运行实验。

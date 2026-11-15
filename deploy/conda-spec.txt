@@ -1,0 +1,9 @@
+# Linux x86_64 独立环境直接依赖；传递依赖首次部署后导出锁定
+python=3.10.13
+pip=23.3.2
+numpy=1.23.5
+scipy=1.10.1
+mkl=2023.1.0
+pytorch::faiss-gpu=1.7.4=py3.10_hc0239a3_0_cuda11.4
+pytorch::libfaiss=1.7.4=h13c3c6d_0_cuda11.4
+nvidia::cudatoolkit=11.4.1=h8ab8bb3_9
