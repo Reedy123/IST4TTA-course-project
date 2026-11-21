@@ -12,7 +12,7 @@ import sys
 from locked_source import verify, digest
 from setup_runtime import DEFAULT_RUNTIME, RELEASE
 from verify_inputs import check_inputs
-from runtime_support import gpu_idle_info, monitor, process_environment, check_metrics
+from runtime_support import gpu_idle_info, wait_gpu_idle, monitor, process_environment, check_metrics
 
 TOOLS = Path(__file__).resolve().parent
 
@@ -104,7 +104,7 @@ def execute(plan):
         environment=validate_environment(plan)
         (output/'environment.json').write_text(json.dumps(environment,ensure_ascii=False,indent=2))
         for task in plan['tasks']:
-            verify(repo);hardware=gpu_idle_info(plan['device'])
+            verify(repo);hardware=wait_gpu_idle(plan['device'],output/'gpu-safety.jsonl',check=gpu_idle_info)
             group=output/task['id'];group.mkdir()
             cmd=task['adaptation_command'];(group/'command.json').write_text(json.dumps(cmd,indent=2))
             timing=monitor(cmd,group/'adaptation.log',group/'gpu.csv',repo,plan['device'])

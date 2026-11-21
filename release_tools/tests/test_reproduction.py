@@ -21,7 +21,7 @@ from prepare_runs import make_plan, execute
 from adapt_smoke_entry import smoke_tree
 from install_environment import installation_plan
 from fetch_weights import prepare_weights
-from runtime_support import gpu_idle_info, check_metrics
+from runtime_support import gpu_idle_info, wait_gpu_idle, GpuBusyError, check_metrics
 from summarize_replication import summarize
 
 
@@ -149,6 +149,68 @@ class ReproductionTests(unittest.TestCase):
         """所选卡已有进程时不尝试结束进程或启动实验。"""
         with patch('runtime_support.subprocess.check_output',side_effect=['0, UUID0, NVIDIA GeForce RTX 3080, 0, 10240, 0\n','UUID0, 1234\n']):
             with self.assertRaises(ValueError):gpu_idle_info(0)
+
+    def test_transient_utilization_requires_two_idle_reads(self):
+        """自身诊断留下8%利用率时等待，连续两次0%且无进程才放行并记录现场。"""
+        busy=GpuBusyError({'memory_used_MiB':1,'utilization_percent':8,'compute_processes':[]},True)
+        idle={'memory_used_MiB':1,'utilization_percent':0,'compute_processes':[]}
+        audit=Path(self.case.name)/'safety.jsonl'
+        with patch('runtime_support.time.sleep') as sleep:
+            from unittest.mock import Mock
+            check=Mock(side_effect=[busy,idle,idle])
+            self.assertEqual(wait_gpu_idle(0,audit,check),idle)
+            self.assertEqual(check.call_count,3);self.assertEqual(sleep.call_count,2)
+        events=[json.loads(line) for line in audit.read_text().splitlines()]
+        self.assertEqual([e['status'] for e in events],['blocked','idle','idle'])
+        self.assertEqual(events[0]['snapshot']['utilization_percent'],8)
+        self.assertIn('utc',events[0])
+
+    def test_real_process_or_memory_never_waits(self):
+        """真实PID或显存超限立即拒绝，不等待其他用户任务。"""
+        from unittest.mock import Mock
+        for snapshot in [{'compute_processes':[['UUID0','1234']]},{'memory_used_MiB':300}]:
+            with self.subTest(snapshot=snapshot),patch('runtime_support.time.sleep') as sleep:
+                check=Mock(side_effect=GpuBusyError(snapshot,False))
+                with self.assertRaises(GpuBusyError):wait_gpu_idle(check=check)
+                sleep.assert_not_called();self.assertEqual(check.call_count,1)
+
+    def test_persistent_utilization_times_out(self):
+        """持续利用率高时到期停止，不放宽原5%阈值。"""
+        from unittest.mock import Mock
+        check=Mock(side_effect=GpuBusyError({'utilization_percent':8},True))
+        with patch('runtime_support.time.monotonic',side_effect=[0,0,0,1,2]),patch('runtime_support.time.sleep'):
+            with self.assertRaisesRegex(ValueError,'超时'):wait_gpu_idle(check=check,timeout=1)
+        self.assertEqual(check.call_count,2)
+
+    def test_new_process_between_idle_samples_stops(self):
+        """第一次空闲后出现新用户进程时仍立即停止。"""
+        from unittest.mock import Mock
+        check=Mock(side_effect=[{},GpuBusyError({'compute_processes':[['UUID0','99']]},False)])
+        with patch('runtime_support.time.sleep'):
+            with self.assertRaises(GpuBusyError):wait_gpu_idle(check=check)
+        self.assertEqual(check.call_count,2)
+
+    def test_unavailable_probe_is_not_retried(self):
+        """设备读数不明时拒绝运行，日志保留错误而不冒充空闲。"""
+        from unittest.mock import Mock
+        audit=Path(self.case.name)/'unavailable.jsonl';check=Mock(side_effect=ValueError('N/A'))
+        with patch('runtime_support.time.sleep') as sleep:
+            with self.assertRaises(ValueError):wait_gpu_idle(check=check,audit=audit)
+            sleep.assert_not_called()
+        self.assertEqual(json.loads(audit.read_text())['status'],'unavailable')
+
+    def test_nan_gpu_reading_is_rejected(self):
+        """NaN不能通过比较运算伪装成空闲。"""
+        with patch('runtime_support.subprocess.check_output',side_effect=['0, UUID0, RTX, nan, 10240, 0\n','']):
+            with self.assertRaisesRegex(ValueError,'读数无效'):gpu_idle_info(0)
+
+    def test_busy_error_contains_pid_and_timestamp(self):
+        """拦截日志保留PID、显存、利用率和UTC时间。"""
+        with patch('runtime_support.subprocess.check_output',side_effect=['0, UUID0, RTX, 400, 10240, 10\n','UUID0, 1234\n']):
+            with self.assertRaises(GpuBusyError) as caught:gpu_idle_info(0)
+        self.assertFalse(caught.exception.retryable)
+        self.assertEqual(caught.exception.snapshot['compute_processes'][0][1],'1234')
+        self.assertIn('observed_utc',caught.exception.snapshot)
 
     def test_scheduler_allocation_is_respected(self):
         """不会通过改CUDA_VISIBLE_DEVICES占用未分配的物理GPU。"""

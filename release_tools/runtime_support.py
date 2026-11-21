@@ -1,5 +1,6 @@
 """新复现入口的GPU空闲检查、半秒采样和安全进程启动，完全使用标准库。"""
 import csv
+from datetime import datetime, timezone
 import io
 import json
 import math
@@ -8,6 +9,47 @@ from pathlib import Path
 import subprocess
 import threading
 import time
+
+
+class GpuBusyError(ValueError):
+    """保存拒绝启动的现场，只允许无进程低显存的利用率尾迹进入有限复查。"""
+    def __init__(self, snapshot, retryable):
+        self.snapshot = snapshot
+        self.retryable = retryable
+        super().__init__('指定GPU未满足空闲条件：' + json.dumps(snapshot, ensure_ascii=False))
+
+
+def wait_gpu_idle(device=0, audit=None, check=None, timeout=5.0, interval=1.0):
+    """保持原阈值，诊断后最多复查5秒；连续两次空闲才放行，实际占用立即停止。"""
+    check = check or gpu_idle_info
+    start = time.monotonic()
+    consecutive = 0
+    while True:
+        event = {'utc': datetime.now(timezone.utc).isoformat(), 'elapsed_seconds': time.monotonic()-start}
+        try:
+            snapshot = check(device)
+            consecutive += 1
+            event.update(status='idle', snapshot=snapshot, consecutive_idle=consecutive)
+        except GpuBusyError as error:
+            event.update(status='blocked', snapshot=error.snapshot, retryable=error.retryable)
+            consecutive = 0
+            if not error.retryable:
+                if audit:
+                    with Path(audit).open('a') as handle:handle.write(json.dumps(event, ensure_ascii=False)+'\n')
+                raise
+        except (ValueError, OSError, subprocess.SubprocessError) as error:
+            event.update(status='unavailable', error=str(error))
+            if audit:
+                with Path(audit).open('a') as handle:handle.write(json.dumps(event, ensure_ascii=False)+'\n')
+            raise
+        if audit:
+            with Path(audit).open('a') as handle:handle.write(json.dumps(event, ensure_ascii=False)+'\n')
+        if consecutive >= 2:
+            return snapshot
+        remaining = timeout-(time.monotonic()-start)
+        if remaining <= 0:
+            raise ValueError('GPU有限复查超时，仍未连续两次确认空闲；停止启动')
+        time.sleep(min(interval, remaining))
 
 
 def gpu_idle_info(device=0):
@@ -26,11 +68,16 @@ def gpu_idle_info(device=0):
             raise ValueError('指定物理GPU不在现有CUDA_VISIBLE_DEVICES分配内；不绕过实验室调度')
     processes = subprocess.check_output(['nvidia-smi', '--query-compute-apps=gpu_uuid,pid', '--format=csv,noheader'], text=True)
     busy = [r for r in csv.reader(io.StringIO(processes), skipinitialspace=True) if r and r[0].strip() == uuid]
-    if busy or float(used) > 256 or float(utilization) > 5:
-        raise ValueError('指定GPU正在使用或空闲条件无法确认；不影响现有任务，停止启动')
-    return dict(index=int(index), uuid=uuid, name=name, memory_used_MiB=float(used),
-                memory_total_MiB=float(total), utilization_percent=float(utilization),
-                paper_hardware=name == 'NVIDIA GeForce RTX 3080')
+    values = [float(used), float(total), float(utilization)]
+    if not all(math.isfinite(v) for v in values) or values[0] < 0 or values[1] <= 0 or not 0 <= values[2] <= 100:
+        raise ValueError('GPU读数无效，停止启动：' + repr(chosen))
+    snapshot = dict(index=int(index), uuid=uuid, name=name, memory_used_MiB=values[0],
+                    memory_total_MiB=values[1], utilization_percent=values[2],
+                    compute_processes=busy, observed_utc=datetime.now(timezone.utc).isoformat(),
+                    paper_hardware=name == 'NVIDIA GeForce RTX 3080')
+    if busy or values[0] > 256 or values[2] > 5:
+        raise GpuBusyError(snapshot, retryable=not busy and values[0] <= 256)
+    return snapshot
 
 
 def process_environment(device):
