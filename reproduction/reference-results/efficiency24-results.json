@@ -1,0 +1,362 @@
+[
+  {
+    "corruption": "gaussian_noise",
+    "repeat": 0,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/gaussian_noise-r1-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_gaussian_noise_5_adapt.pth",
+    "checkpoint_sha256": "fd1247ec117979abff02369465b47c38fa9eac0a2cd3ded86ef467a155e5cfc1",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8539,
+      "eight": 0.8712
+    },
+    "adaptation_seconds": 238.83601395700043,
+    "faiss_seconds": 18.329577957001675,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "gaussian_noise",
+    "repeat": 0,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/gaussian_noise-r1-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_gaussian_noise_5_adapt.pth",
+    "checkpoint_sha256": "bdbdf203ab43f4b4fd56e3fec92c6d0b2680b2e22af20f534a16e7711ac6f5c8",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8534,
+      "eight": 0.871
+    },
+    "adaptation_seconds": 110.58106216399938,
+    "faiss_seconds": 0.712128197000311,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "motion_blur",
+    "repeat": 0,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/motion_blur-r1-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_motion_blur_5_adapt.pth",
+    "checkpoint_sha256": "8b66bc0cb7e19fbeb70af3beacf9e4bfe31a9d72b60ecc0236e0c497904b9640",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.9168,
+      "eight": 0.9253
+    },
+    "adaptation_seconds": 113.98712396100018,
+    "faiss_seconds": 0.7345731199957299,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "motion_blur",
+    "repeat": 0,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/motion_blur-r1-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_motion_blur_5_adapt.pth",
+    "checkpoint_sha256": "e35a74bde660f1d907c46096a48fed49b6c800379522f456452f1a648d974079",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.9177,
+      "eight": 0.9259
+    },
+    "adaptation_seconds": 198.09182937599962,
+    "faiss_seconds": 16.93972113000018,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "fog",
+    "repeat": 0,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/fog-r1-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_fog_5_adapt.pth",
+    "checkpoint_sha256": "31dd2614131d9c30d23e2deee57ec8d0320d1edfb2f8b9203414699293751e4d",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.887,
+      "eight": 0.9016
+    },
+    "adaptation_seconds": 190.29140353599996,
+    "faiss_seconds": 37.51581323700066,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "fog",
+    "repeat": 0,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/fog-r1-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_fog_5_adapt.pth",
+    "checkpoint_sha256": "4bd3f32ad7ca6a9b346be99cf3c2d0a9a1f54da9f1bd1314d14ab5789f039620",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8873,
+      "eight": 0.9011
+    },
+    "adaptation_seconds": 93.66473118799968,
+    "faiss_seconds": 0.7351398820028407,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "jpeg_compression",
+    "repeat": 0,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/jpeg_compression-r1-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_jpeg_compression_5_adapt.pth",
+    "checkpoint_sha256": "c1e7617be084697daf2c1c4a57ec2e32b97b31adc16ecddb95def4fe19fa2296",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8555,
+      "eight": 0.8736
+    },
+    "adaptation_seconds": 113.27728599500006,
+    "faiss_seconds": 1.7262742610037094,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "jpeg_compression",
+    "repeat": 0,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/jpeg_compression-r1-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_jpeg_compression_5_adapt.pth",
+    "checkpoint_sha256": "aa8cd60adfc453ffe1cab1e99479d1948a2fa34551a57fe764186230254cdd64",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8551,
+      "eight": 0.8739
+    },
+    "adaptation_seconds": 155.16692056400007,
+    "faiss_seconds": 27.216863597001066,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "gaussian_noise",
+    "repeat": 1,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/gaussian_noise-r2-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_gaussian_noise_5_adapt.pth",
+    "checkpoint_sha256": "bdbdf203ab43f4b4fd56e3fec92c6d0b2680b2e22af20f534a16e7711ac6f5c8",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8534,
+      "eight": 0.871
+    },
+    "adaptation_seconds": 187.83183930299947,
+    "faiss_seconds": 5.924662258997159,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "gaussian_noise",
+    "repeat": 1,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/gaussian_noise-r2-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_gaussian_noise_5_adapt.pth",
+    "checkpoint_sha256": "fd1247ec117979abff02369465b47c38fa9eac0a2cd3ded86ef467a155e5cfc1",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8539,
+      "eight": 0.8712
+    },
+    "adaptation_seconds": 151.15296249699986,
+    "faiss_seconds": 17.251675080001405,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "motion_blur",
+    "repeat": 1,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/motion_blur-r2-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_motion_blur_5_adapt.pth",
+    "checkpoint_sha256": "e35a74bde660f1d907c46096a48fed49b6c800379522f456452f1a648d974079",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.9177,
+      "eight": 0.9259
+    },
+    "adaptation_seconds": 182.86977594400014,
+    "faiss_seconds": 32.67895211300129,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "motion_blur",
+    "repeat": 1,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/motion_blur-r2-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_motion_blur_5_adapt.pth",
+    "checkpoint_sha256": "8b66bc0cb7e19fbeb70af3beacf9e4bfe31a9d72b60ecc0236e0c497904b9640",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.9168,
+      "eight": 0.9253
+    },
+    "adaptation_seconds": 93.4369226810004,
+    "faiss_seconds": 0.7106567970022297,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "fog",
+    "repeat": 1,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/fog-r2-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_fog_5_adapt.pth",
+    "checkpoint_sha256": "4bd3f32ad7ca6a9b346be99cf3c2d0a9a1f54da9f1bd1314d14ab5789f039620",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8873,
+      "eight": 0.9011
+    },
+    "adaptation_seconds": 128.57783470400045,
+    "faiss_seconds": 2.5014604270036216,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "fog",
+    "repeat": 1,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/fog-r2-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_fog_5_adapt.pth",
+    "checkpoint_sha256": "31dd2614131d9c30d23e2deee57ec8d0320d1edfb2f8b9203414699293751e4d",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.887,
+      "eight": 0.9016
+    },
+    "adaptation_seconds": 156.6163202890002,
+    "faiss_seconds": 19.914739831997395,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "jpeg_compression",
+    "repeat": 1,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/jpeg_compression-r2-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_jpeg_compression_5_adapt.pth",
+    "checkpoint_sha256": "aa8cd60adfc453ffe1cab1e99479d1948a2fa34551a57fe764186230254cdd64",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8551,
+      "eight": 0.8739
+    },
+    "adaptation_seconds": 165.29969111900027,
+    "faiss_seconds": 19.28153204499722,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "jpeg_compression",
+    "repeat": 1,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/jpeg_compression-r2-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_jpeg_compression_5_adapt.pth",
+    "checkpoint_sha256": "c1e7617be084697daf2c1c4a57ec2e32b97b31adc16ecddb95def4fe19fa2296",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8555,
+      "eight": 0.8736
+    },
+    "adaptation_seconds": 128.9702176789997,
+    "faiss_seconds": 9.894003927001904,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "gaussian_noise",
+    "repeat": 2,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/gaussian_noise-r3-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_gaussian_noise_5_adapt.pth",
+    "checkpoint_sha256": "fd1247ec117979abff02369465b47c38fa9eac0a2cd3ded86ef467a155e5cfc1",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8539,
+      "eight": 0.8712
+    },
+    "adaptation_seconds": 301.27903523199984,
+    "faiss_seconds": 79.96956096799386,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "gaussian_noise",
+    "repeat": 2,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/gaussian_noise-r3-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_gaussian_noise_5_adapt.pth",
+    "checkpoint_sha256": "bdbdf203ab43f4b4fd56e3fec92c6d0b2680b2e22af20f534a16e7711ac6f5c8",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8534,
+      "eight": 0.871
+    },
+    "adaptation_seconds": 102.61354325400043,
+    "faiss_seconds": 0.7266956820012638,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "motion_blur",
+    "repeat": 2,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/motion_blur-r3-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_motion_blur_5_adapt.pth",
+    "checkpoint_sha256": "8b66bc0cb7e19fbeb70af3beacf9e4bfe31a9d72b60ecc0236e0c497904b9640",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.9168,
+      "eight": 0.9253
+    },
+    "adaptation_seconds": 98.63238398799967,
+    "faiss_seconds": 0.7390975479956978,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "motion_blur",
+    "repeat": 2,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/motion_blur-r3-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_motion_blur_5_adapt.pth",
+    "checkpoint_sha256": "e35a74bde660f1d907c46096a48fed49b6c800379522f456452f1a648d974079",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.9177,
+      "eight": 0.9259
+    },
+    "adaptation_seconds": 168.17452980599955,
+    "faiss_seconds": 15.754721394997432,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "fog",
+    "repeat": 2,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/fog-r3-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_fog_5_adapt.pth",
+    "checkpoint_sha256": "31dd2614131d9c30d23e2deee57ec8d0320d1edfb2f8b9203414699293751e4d",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.887,
+      "eight": 0.9016
+    },
+    "adaptation_seconds": 165.013087714,
+    "faiss_seconds": 28.2499248360009,
+    "peak_MiB": 3273
+  },
+  {
+    "corruption": "fog",
+    "repeat": 2,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/fog-r3-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_fog_5_adapt.pth",
+    "checkpoint_sha256": "4bd3f32ad7ca6a9b346be99cf3c2d0a9a1f54da9f1bd1314d14ab5789f039620",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8873,
+      "eight": 0.9011
+    },
+    "adaptation_seconds": 117.6069659980003,
+    "faiss_seconds": 0.7179621189943646,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "jpeg_compression",
+    "repeat": 2,
+    "mode": "Ours",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/jpeg_compression-r3-Ours/attempt-001/adaptation/WRN-40-2_cifar10-c_jpeg_compression_5_adapt.pth",
+    "checkpoint_sha256": "c1e7617be084697daf2c1c4a57ec2e32b97b31adc16ecddb95def4fe19fa2296",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8555,
+      "eight": 0.8736
+    },
+    "adaptation_seconds": 100.67576854899926,
+    "faiss_seconds": 0.7138948109914054,
+    "peak_MiB": 3267
+  },
+  {
+    "corruption": "jpeg_compression",
+    "repeat": 2,
+    "mode": "Original",
+    "checkpoint": "/home/featurize/work/ist-efficiency24-20261118-run01/jpeg_compression-r3-Original/attempt-001/adaptation/WRN-40-2_cifar10-c_jpeg_compression_5_adapt.pth",
+    "checkpoint_sha256": "aa8cd60adfc453ffe1cab1e99479d1948a2fa34551a57fe764186230254cdd64",
+    "weights_exact": true,
+    "accuracy": {
+      "single": 0.8551,
+      "eight": 0.8739
+    },
+    "adaptation_seconds": 150.21952928099927,
+    "faiss_seconds": 15.762837361997299,
+    "peak_MiB": 3273
+  }
+]

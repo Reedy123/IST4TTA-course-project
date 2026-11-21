@@ -1,0 +1,38 @@
+anyio==4.16.0
+brotlicffi @ file:///home/task_179300674384324/croot/brotlicffi_1793006772968/work
+certifi @ file:///home/task_179300541075950/croot/certifi_1793006633205/work/certifi
+cffi @ file:///home/task_178669697820872/croot/cffi_1786697024080/work
+charset-normalizer @ file:///home/task_Q9a5_kHMS3G4o_0/croot/charset-normalizer_1782917571308/work
+click==8.5.1
+exceptiongroup==1.3.1
+faiss==1.7.4
+filelock==4.1.0
+fsspec==2026.9.0
+h11==0.16.0
+hf-xet==1.8.0
+httpcore2==2.14.0
+httpx2==2.14.0
+huggingface_hub==2.4.0
+idna @ file:///home/task_179136509341010/croot/idna_1791365133482/work
+mkl-fft==1.3.1
+mkl-random @ file:///home/builder/ci_310/mkl_random_1641843545607/work
+mkl-service==2.4.0
+numpy @ file:///croot/numpy_and_numpy_base_1672336185480/work
+packaging==26.3
+Pillow==9.5.0
+platformdirs @ file:///home/task_179120563482435/croot/platformdirs_1791205679246/work
+pooch @ file:///home/task_QdPKV0nMSCKSk_0/croot/pooch_1785234067613/work
+pycparser @ file:///home/task_179207262359474/croot/pycparser_1792072654078/work
+PySocks @ file:///home/task_179002166134736/croot/pysocks_1790021687774/work
+PyYAML==6.0.1
+requests @ file:///home/task_179138595323439/croot/requests_1791386606304/work
+scipy==1.10.1
+six @ file:///croot/six_1744271502820/work
+timm==0.6.13
+tomli==2.5.0
+torch==1.13.1+cu117
+torchvision==0.14.1+cu117
+tqdm==4.66.4
+truststore==0.10.5
+typing_extensions==4.16.0
+urllib3 @ file:///home/task_179070115098262/croot/urllib3_1790701181098/work

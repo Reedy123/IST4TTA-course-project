@@ -1,0 +1,25 @@
+{
+  "locked_commit": "4de2a66b5e5c8e4e735e13fefabff04bb349f731",
+  "locked_tag": "paper-experiments-180-24-locked",
+  "snapshot_sha256": "38878b56f47c321ce2958b168fd5b9e2329355a9cde458a61714fd87f091fe4b",
+  "snapshot_files": 114,
+  "source_files": 92,
+  "upstream_commit": "03ba8e716f9bb6e0a586718f8836362b7090692b",
+  "source_weight_sha256": "a39f020c48b3bad58df794b5d3a286724f00b9f026ee22d0e6d1710748599e82",
+  "historical_files": {
+    "reproduction/original/efficiency24_runner.py": "f03991b5b303f4cc2b3e9b721511dcab1a86eb67810ea472e19382b44a3d6c38",
+    "reproduction/original/build_report.py": "58115d955131e610058e57b0a6916fd98acef0543a5d341b20888a5ffd4fc81c",
+    "reproduction/environment/formal-pip-freeze.txt": "f2aee0e2c2e7cccd7f6863d3ad3945ab6722ea7483f596ab0357fe269b3b4e3f"
+  },
+  "note": "原始执行器和原报告脚本逐字节保留；release_tools为发布后新工具，未用于历史实验。环境候选导出不宣称是完整正式环境锁。",
+  "reference_results": {
+    "formal-results.json": "e2ee7c501f1594fa8bb08bb2369df307a15dab67dd6ef397350f1ad5c939b4a8",
+    "statistics.json": "9b38ab42fe62ea8f4d4f5822b5e3586160d6a11e56a07df341597c4c2931f300",
+    "per-run.csv": "1e54850ad69a38ea9c0d13522ecbf58facad572dd894b3732224770721973dc8",
+    "paper-main-table.csv": "23df907914e060551a92ef62ecd49ee40a2619b38657f3cf7e51ca9ff04e2b96",
+    "paper-2x2-ablation.csv": "70b91ede7a220fbe02476eea665461e9de4b1952f5df8903ba34d21b50a85284",
+    "efficiency24-results.json": "6a2812035137fe515a502bc7bea29a3253b078f32d9d444bc2526ce6d0880b07",
+    "efficiency-summary.csv": "56214f554b60da1840daaf5a264cbdf481452eb50cb63ab46419fea331af7198",
+    "efficiency-pairs.csv": "83a869f9054ee7e85edd3b7fdfb2d52dcca96d0933c37cb2da11f42da66ef847"
+  }
+}
