@@ -15,7 +15,7 @@ def check_repo(repo):
     """核对官方版本、文件完整性和工作区状态。"""
     subprocess.run(["git", "merge-base", "--is-ancestor", COMMIT, "HEAD"], cwd=repo, check=True)
     subprocess.run(["git", "diff", "--exit-code", COMMIT, "--", "model", "dataset", "utils", "online.py", "online_clip.py", "scripts", "requirements.txt", "LICENSE", "README.md"], cwd=repo, check=True)
-    assert not subprocess.check_output(["git", "status", "--porcelain"], cwd=repo, text=True).strip(), "官方仓库存在改动或未跟踪文件"
+    assert not subprocess.check_output(["git", "status", "--porcelain", "--", "model", "dataset", "utils", "online.py", "online_clip.py", "scripts", "requirements.txt", "LICENSE", "README.md"], cwd=repo, text=True).strip(), "官方算法文件存在改动"
     sys.path.insert(0, str(repo))
     os.chdir(repo)
 
@@ -132,4 +132,9 @@ def main():
 
 
 if __name__ == '__main__':
+    # 固定使用持久化环境，避免误用系统或 py38。
+    target = Path(os.environ.get("IST_ENV_PREFIX", str(Path.home() / "work/envs/ist310"))) / "bin/python"
+    assert target.is_file(), f"持久化环境不存在：{target}"
+    if Path(sys.prefix).resolve() != target.parent.parent.resolve():
+        os.execv(str(target), [str(target), str(Path(__file__).resolve()), *sys.argv[1:]])
     main()

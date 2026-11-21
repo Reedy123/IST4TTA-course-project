@@ -17,7 +17,7 @@
 # 克隆协作仓库后，进入其根目录
 export REPO="$PWD"
 export KIT="$REPO/deploy"
-export IST_ENV_PREFIX="$(dirname "$REPO")/env-ist310"
+export IST_ENV_PREFIX="$HOME/work/envs/ist310"
 export PYTHONDONTWRITEBYTECODE=1
 
 # 将 Featurize 数据集 ZIP 解压到 $REPO/data/，避免嵌套 data/data

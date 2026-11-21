@@ -1,3 +1,5 @@
+> 实机修复：FAISS 1.7.4 该构建需要 MKL .so.1；已验证 MKL 2021.4.0，禁止使用 2023.1.0 的 .so.2 冒充。已固定数值库构建。
+
 > 协作仓库使用说明：以根目录 DEPLOY.md 为准。工具已整合到 deploy/，原始源码保持不变；下文原工具包目录示例仅供参考。验证脚本允许新增协作提交，并核对原始算法差异。
 
 # IST 最小复现部署材料
@@ -12,7 +14,7 @@
 - 必须安装：torch、torchvision、GPU FAISS、NumPy、SciPy、timm、Pillow、PyYAML、tqdm 及其必要传递依赖。
 - 本实验可省略：CLIP、ftfy、regex、datasets、torchaudio。源码导入链不依赖它们；不要执行官方 requirements.txt 的整表安装。
 - FAISS 包来自 pytorch 渠道；它使用的 CUDA Toolkit 11.4.1 来自 nvidia 渠道。此前只写 pytorch/defaults 不完整。
-- 选定 libfaiss 要求 cudatoolkit >=11.4.1,<11.5 和 mkl>=2021。固定 MKL 2023.1.0；其传递依赖含 intel-openmp 2023.* 和 tbb 2021.*。避免求解到 MKL 2024.1+，旧 PyTorch 生态有 iJIT_NotifyEvent 导入错误报告，但不能将该报告直接视为本组合必现。
+- 选定 libfaiss 要求 cudatoolkit >=11.4.1,<11.5 和 mkl>=2021。固定 MKL 2021.4.0；其传递依赖含 intel-openmp 2021.* 和 tbb 2021.*。避免求解到 MKL 2024.1+，旧 PyTorch 生态有 iJIT_NotifyEvent 导入错误报告，但不能将该报告直接视为本组合必现。
 - NumPy 1.23.5 同时满足 FAISS 的 <2 与 SciPy 1.10.1 的 >=1.19.5,<1.27；SciPy 1.10.1 保留 cg(tol=...)。
 - FAISS CUDA 11.4 与 PyTorch wheel cu117 是两套用户态运行库，不需要替换服务器驱动或系统 CUDA。现有 cu117 可用是有利条件，但不证明动态链接顺序安全。验证脚本在两个独立进程中测试两种导入顺序，并检查 GPU 运算、原版 PLCA 半精度稀疏计算及 NCCL。
 - 不设置或覆盖 LD_LIBRARY_PATH。若云镜像已设置 CUDA 路径，先记录；动态库失败时可在子进程中用 env -u LD_LIBRARY_PATH 重试并比较，不能直接删除系统库。
@@ -36,7 +38,7 @@
 ```bash
 export REPO="$HOME/ist-work/IST4TTA-official"
 export KIT="$HOME/ist-work/ist-minimal-kit"
-export IST_ENV_PREFIX="$HOME/ist-work/env-ist310"
+export IST_ENV_PREFIX="$HOME/work/envs/ist310"
 export PYTHONDONTWRITEBYTECODE=1
 uname -m
 ldd --version | head -1
