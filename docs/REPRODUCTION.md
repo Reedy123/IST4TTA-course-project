@@ -1,106 +1,117 @@
-# 完整复现步骤与历史边界
+# 从零复现与历史实验边界
 
-所有安装、下载、验证GPU和实验命令都是未来实验机上的操作说明。本轮只在Mac进行CPU语法、源码摘要、命令及指标复核，没有执行下面的GPU/安装步骤。
+新入口是`python reproduce.py`。它不读旧16组、不假定`/home/featurize`或固定环境前缀；使用当前Python，另建锁定源码工作树、链接用户的数据，结果只写全新目录。原204组归档和锁定标签不改变。
 
-## 1. 分开发布目录和锁定目录
+## 1. 克隆和环境
 
-先按根README创建发布工作树及标签工作树，并设置`RELEASE_DIR`、`LOCKED_DIR`。锁定标签精确提交见`reproduction/manifests/provenance.json`。检出时关闭自动行尾转换，避免改变源码摘要。
-
-不要把release_tools/或原24执行器复制进LOCKED_DIR。旧验证器检查README与上游是否一致，源码清单会记录新增.py/.sh；在发布分支关闭断言不属于原实验。正确做法是只在锁定目录运行原算法，外部工具通过--repo引用它。源码核验为纯CPU操作：
+需要Git完整克隆、Linux x86_64、已有conda及可用NVIDIA GPU。Mac可进行CPU核验/生成计划，不能执行原CUDA/FAISS GPU模型。ZIP下载或浅克隆可能缺少锁定提交及公开权重的历史对象，因此建议完整克隆：
 
 ```bash
-python3 "$RELEASE_DIR/release_tools/verify_locked.py" --repo "$LOCKED_DIR"
+git -c core.autocrlf=false clone --branch release/paper-final https://github.com/Reedy123/IST4TTA-course-project.git ist-course
+cd ist-course
+python3 reproduce.py install --prefix ../ist-env
+# 审阅计划后，仅在准备新环境时加--apply。已有实验室环境不重装/覆盖。
+python3 reproduce.py install --prefix ../ist-env --apply
+conda activate "$(cd ../ist-env && pwd)"
 ```
 
-## 2. 环境准备（未来Linux实验机）
+版本和修复前/后证据见[环境说明](../reproduction/environment/README.md)。采用Python3.10.13、torch1.13.1+cu117/torchvision0.14.1+cu117、FAISS GPU1.7.4、MKL2021.4、NumPy1.23.5、SciPy1.10.1；安装器使用修复后的明确包URL和pip来源锁。驱动能力CUDA13.0、torch运行库11.7、FAISS conda Toolkit11.4.1是不同字段，不相互覆盖。新机器安装尚未在本轮实测。
 
-目标：Linux x86_64，单张RTX3080 10GB，Python3.10.13、torch1.13.1+cu117、torchvision0.14.1+cu117、FAISS GPU1.7.4、NumPy1.23.5、SciPy1.10.1、MKL2021.4匹配构建。CUDA11.4 FAISS库和torch cu117需实机联合验证，不能仅由版本表证明兼容。
+## 2. 公开数据与权重
 
-以锁定源码里的部署方案为起点；已有conda需由用户提供，脚本不安装conda。先审查再明确安装到不存在的独立前缀：
+需要官方干净CIFAR-10与CIFAR-10-C完整包。下载后先检查大小/MD5，再解压；保留完整五个severity，不裁npy。以下Linux命令只适用于尚不存在的下载/数据目录，已有合格数据可跳过下载直接setup。
 
 ```bash
-export IST_ENV_PREFIX="$HOME/work/envs/ist310"
-cd "$LOCKED_DIR"
-bash deploy/01_install.sh --dry-run
-# 仅在另行决定安装后执行，已有环境不能覆盖：
-bash deploy/01_install.sh --apply
+mkdir ../ist-downloads ../ist-data
+curl -L --fail --retry 2 https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz -o ../ist-downloads/cifar-10-python.tar.gz
+curl -L --fail --retry 2 https://zenodo.org/api/records/2535967/files/CIFAR-10-C.tar/content -o ../ist-downloads/CIFAR-10-C.tar
+printf '%s  %s\n' c58f30108f718f92721af3b95e74349a ../ist-downloads/cifar-10-python.tar.gz | md5sum -c -
+printf '%s  %s\n' 56bf5dcef84df0e2308c6dcbcbbd8499 ../ist-downloads/CIFAR-10-C.tar | md5sum -c -
+# CIFAR-10为170498071字节，CIFAR-10-C为2918471680字节。
+tar -xzf ../ist-downloads/cifar-10-python.tar.gz -C ../ist-data
+tar -xf ../ist-downloads/CIFAR-10-C.tar -C ../ist-data
+python reproduce.py weights --data-dir ../ist-data
+python reproduce.py setup --data-dir ../ist-data
+python reproduce.py inputs --corruptions gaussian_noise
 ```
 
-候选explicit、pip-only及冲突记录见`reproduction/environment/README.md`。正式pip-freeze含构建机file:///路径，不可直接全表安装。没有完整、同一时点且经实机验证的传递依赖锁，不承诺离线重建。
+[干净CIFAR官方来源](https://www.cs.toronto.edu/~kriz/cifar.html)、[CIFAR-10-C Zenodo](https://zenodo.org/records/2535967)。`weights`从克隆历史中固定上游提交03ba8e7提取公开AugMix WRN-40-2，不使用我们适应后的模型；SHA-256为`a39f020c48b3bad58df794b5d3a286724f00b9f026ee22d0e6d1710748599e82`，已有错误文件拒绝覆盖。若本地缺少该Git对象，可从[固定官方文件](https://raw.githubusercontent.com/JingInAI/IST4TTA/03ba8e716f9bb6e0a586718f8836362b7090692b/data/ModelZoo/Hendrycks2020AugMixWRN.pt)获取，保存到数据目录的ModelZoo同名文件，并用inputs核验，不跳过摘要。
 
-## 3. 官方数据与源权重（自行获取，不进Git）
-
-- 干净CIFAR-10：[官方Python压缩包](https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz)，170498071字节，MD5 `c58f30108f718f92721af3b95e74349a`。
-- CIFAR-10-C：[Zenodo记录2535967](https://zenodo.org/records/2535967)，完整`CIFAR-10-C.tar`，2918471680字节，MD5 `56bf5dcef84df0e2308c6dcbcbbd8499`。获取全部15种普通扰动npy并保留全部五个等级，不裁成只有severity5。
-- 源权重：官方AugMix WRN-40-2，脚本`bash "$LOCKED_DIR/deploy/00_fetch_weights.sh"`从固定上游提交获取并校验，SHA-256 `a39f020c48b3bad58df794b5d3a286724f00b9f026ee22d0e6d1710748599e82`。这不是随机初始化，也不是新的训练随机种子。
-
-将官方数据放在锁定目录忽略的data/，也可在data/不存在时链接外部数据目录。不要多套一层data/data；不要向发布目录提交这些文件：
+最终外部目录应为：
 
 ```text
-data/
-  cifar-10-batches-py/
-    data_batch_1 ... data_batch_5
-    test_batch
-    batches.meta
-  CIFAR-10-C/
-    gaussian_noise.npy ... jpeg_compression.npy（完整15种）
-    labels.npy（官方附带；模型加载使用干净CIFAR标签）
-  ModelZoo/
-    Hendrycks2020AugMixWRN.pt
+ist-data/
+  cifar-10-batches-py/   # data_batch_1..5、test_batch、batches.meta
+  CIFAR-10-C/           # 完整15种npy及官方labels.npy
+  ModelZoo/Hendrycks2020AugMixWRN.pt
 ```
 
-在环境准备完成后执行：
+inputs核验源权重及所选扰动SHA、干净数据存在性；官方加载器在运行时检查干净CIFAR完整性。完整15种用`python reproduce.py inputs`。旧verify_complete_data需要历史校验文件，不作为从零入口。
+
+setup默认使用仓库旁`../ist-experiment-locked`，固定提交A并验证114/92摘要，再将该目录的data链接到指定外部数据。若自定义`--runtime /新路径`，后续run/inputs需同时指定`--repo /新路径`。已有非锁定目录或不同数据链接会停止，不覆盖任何文件。不要复制发布脚本进锁定工作树。
+
+## 3. 检查设备，先跑小测
+
+先确认已获得实验室空闲GPU的使用授权/调度分配。脚本只在启动前检查GPU进程、显存和利用率，不能阻止其他用户随后启动；没有调度锁或独占保证。忙碌、信息不全、环境不符就停止，不杀进程、不覆盖环境。
 
 ```bash
-python3 "$RELEASE_DIR/release_tools/verify_inputs.py" --repo "$LOCKED_DIR"
-"$IST_ENV_PREFIX/bin/python" "$LOCKED_DIR/deploy/02_verify.py" --repo "$LOCKED_DIR" env
-"$IST_ENV_PREFIX/bin/python" "$LOCKED_DIR/deploy/02_verify.py" --repo "$LOCKED_DIR" weights
-"$IST_ENV_PREFIX/bin/python" "$LOCKED_DIR/deploy/02_verify.py" --repo "$LOCKED_DIR" data
+python reproduce.py check
+# 此命令进行微型联合GPU算子检查，不是模型测试；先确保卡空闲。
+python reproduce.py check --require-gpu --device 0
+# 以下是真正GPU新运行；删除--execute则只打印计划。
+python reproduce.py run --mode Original --smoke --output ../smoke-original --execute
+python reproduce.py run --mode Ours --smoke --output ../smoke-ours --execute
+python reproduce.py run --smoke --output ../smoke-2x2 --execute
 ```
 
-第一个工具只做CPU摘要/存在性检查，不证明标签关系；原data验证包含Gaussian Noise及官方干净CIFAR完整性，不能冒充全部15类的新数据加载验证。原`verify_complete_data.py`需历史数据校验记录，不作为从零命令。新包装执行前再核对所选扰动和权重摘要，官方加载器仍执行其原有检查。
+默认小测适应2批（256张原图，batch128、八视图保持不变），初始评估和最终评估各128张。`--max-batches 3 --eval-images 256`可显式调整小测。为避免原入口初始评估全部10000张，外部`adapt_smoke_entry.py`仅在内存中给唯一test_dataset加固定子集；适应流程/损失/更新不改文件。最终小测评估复用锁定的SharedViews、predict、state_hash函数，固定原索引0..N-1；不是论文完整准确率，也不与历史180/24组混合。
 
-## 4. 无旧归档也能生成/启动的新复现
+其他空闲NVIDIA卡可验证功能，但记录实际硬件，`paper_hardware=false`时不能视为RTX3080论文效率复测。新入口未完成GPU验收，成功的CPU模拟不能称为复现成功。
 
-根README中的prepare_runs.py默认只生成命令，Original/Ours或四模式均可从源权重独立开始，无需旧16组和历史smoke。只有在完成上述环境和输入验证后，才可使用实验环境解释器、指定同一--python并追加--execute。示例会产生新的GPU实验，**本轮未执行**：
+## 4. 完整适应与2×2
 
 ```bash
-"$IST_ENV_PREFIX/bin/python" "$RELEASE_DIR/release_tools/prepare_runs.py" \
-  --repo "$LOCKED_DIR" --python "$IST_ENV_PREFIX/bin/python" \
-  --output "$HOME/work/ist-fresh-2x2-unique" \
-  --corruptions gaussian_noise --seeds 42 --execute
+python reproduce.py run --mode Original --output ../full-original --execute
+python reproduce.py run --mode Ours --output ../full-ours --execute
+python reproduce.py run --output ../full-2x2 --execute
+# 完整180组仅生成计划；本次任务禁止实际重跑。
+python reproduce.py run --all-180 --output ../new-180-plan
 ```
 
-删去--execute即只生成计划；--modes Original Ours选两组；--all-180选完整15扰动×3适应随机种子×4模式。新包装默认不续跑，拒绝已有结果目录；失败记录保留，不能将不完整权重当新预训练起点。
+去掉--smoke时，直接调用锁定online_complete.py和complete_evaluate.py，适应/评估均为10000张，无初始评估内存适配。保留batch128、extend8、K50（实际检索52）、memory10000视图、lr0.001、iters1、repeat1、workers2、原CE/KL/SGD/PMA、最后一批保存。Original指该锁定原配置，不是旧每批保存入口的耗时。
 
-命令沿用`complete_protocol.command`的完整适应参数及相对调度：batch128、八视图、memory10000视图节点、K50（L2实际检索52）、lr0.001、iters1、repeat1、workers2、原SGD与批末PMA、仅最终保存。默认master port16835，需确保无冲突，不并发启动同一端口。每组重新加载同一源权重，评估始终固定42+原图索引。
+可用`--mode Original-Reuse No-history`、`--corruptions fog jpeg_compression`、`--seeds 42 43 44`选择组合；其他参数为--device、--master-port、--repo和--python。适应随机种子均从同一源权重开始，评估增强始终42+原索引。原调度用于过滤后的相对顺序，不使用旧16组准确率；每个新模型独立重新评估。没有自动续跑，失败保留日志，需要新目录开始。
 
-新包装使用原monitor/适应入口/独立评估器，但不复刻旧总控的全部跨组等价审计或旧16组准确率复用；每个新模型都重新评估。`replication-results.json`有publication_wrapper标记，plan中记录锁定提交，不能冒用原180组的complete证明。GPU执行路径尚未验收，源码锁一致不保证新硬件/负载/环境中的位级和耗时一致。
+## 5. 输出和统计
 
-## 5. 原180组历史流程（需要旧归档）
+```text
+新输出根目录/
+  plan.json                   # 源码锁、发布工具摘要、任务与实际命令
+  inputs.json / environment.json
+  gaussian_noise-s42-Original/
+    command.json / adaptation.log / gpu.csv / launcher.json
+    adaptation/               # profile、审计与唯一最终*adapt.pth
+    evaluation-command.json / evaluation.log
+    evaluation/results.json / predictions.csv
+  replication-results.json
+  complete.json               # 全部所选任务检查通过才创建
+  failure.json                # 失败时保留，不能当完成证明
+```
 
-以下只适用于已有完整旧16组、旧smoke和全部校验清单/权重者，不能作为全新用户最短入口。固定环境与工作树后，审阅旧脚本再使用原参数：
+适应秒数取原profile墙钟，排除初始/最终评估；包含取数、PLCA、模型更新、PMA、日志和最终保存。FAISS秒数是内部阶段，不能再和适应相加。设备显存半秒采样峰值不是瞬时精确峰值。新监控器只采所选物理GPU，子进程映射cuda:0，不误用服务器其他卡。
 
 ```bash
-cd "$LOCKED_DIR"
-# 这些路径必须是真实、完整的历史归档；示例不会替你生成证明。
-"$IST_ENV_PREFIX/bin/python" -m experiments.check_complete_smoke \
-  --root "$HOME/work/new-complete-smoke" --legacy-smoke "$HOME/work/真实旧smoke目录"
-bash experiments/start_complete_tmux.sh \
-  "$HOME/work/new-complete" "$HOME/work/真实旧16组目录" ist-complete-suite
+python reproduce.py summary --root ../smoke-2x2 --output ../smoke-summary
+python reproduce.py summary --root ../full-2x2 --output ../full-summary
 ```
 
-总控读取ROOT-smoke/complete.json、旧16组config/results/SHA清单等。恢复旧结果还要求当时源码、环境冻结和路径一致；上传了源码不代表这些旧权重也随Git发布。旧16组耗时采用不同保存策略，禁止混入正式180组，只在权重/轨迹一致时复用准确率。
+生成逐组CSV、方法汇总CSV及JSON。按每个适应随机种子先平均所选扰动，再对种子汇总；只有一个种子时样本标准差留空，不伪造重复。小测只报告流程指标，不输出论文加速宣称。新结果带publication_wrapper、smoke_only及实际硬件标记，不能替换论文/PPT或与历史效率记录混算。
 
-## 6. 原24组效率流程（需要正式模型归档）
+## 6. 原流程仍保留，但不是新同学入口
 
-`reproduction/original/efficiency24_runner.py`保留当时执行器原字节。它需固定home/work目录、RTX3080、输入恢复包、完整正式检查点和参考审计轨迹；缺失时不能仅用reference-results的指标JSON代替。执行器在锁定工作树之外，运行前需核对导入路径、数据/模型位置与恢复等待条件。本发布不提供绕过权重一致性断言的一键开关，也不把另写的新脚本称为已运行的原执行器。
+- 原180组总控继续需要旧16组config/results/SHA、旧smoke证明和特定路径；原源码及标签一字不改。
+- 原24执行器还需要正式权重及轨迹逐项一致，复制准确率而非重新评估。没有这些归档不能把小型指标JSON当作模型。
+- 新入口不关闭旧断言，而在独立锁定工作树之外提供包装。完整运行不用小测AST适配；小测改动明确记录，未声称与原正式执行逐位/耗时一致。
+- 旧README验证限制通过独立A工作树解决，发布README可完善但锁定README保持上游原字节。
 
-24组固定适应随机种子42、三次计时重复；准确率复用而非新增评估。Gaussian Noise第2次减速保留。原报告生成器也保留，但它有固定路径且会写CSV，建议用新的analyze_results.py在全新目录重算。
-
-## 7. 评估、计时与统计
-
-- 最终单视图使用预处理原图；固定八视图使用42+索引生成共享视图，概率平方后在8×10中取最大位置并对10取余，不是平均投票。评估无PLCA、eval/inference_mode、参数及BN不更新。
-- 适应墙钟仅完整适应起止CUDA同步，含取数、多视图前向、PLCA、梯度更新、PMA、日志及最后一次保存；不含初始测试和最终评估。FAISS整块是内部阶段，不能与适应时间相加，也不能把局部降幅当整体降幅。显存为设备半秒采样峰值。
-- 正式表先按种子平均15扰动，再对3种子求均值与样本标准差；配对减少先逐种子计算再汇总。24组独立逐对比值后对12对求均值/样本标准差，不混入180组。
-- CPU统计示例见根README，输入为已发布的小型指标副本，输出必须为新目录。原图像、权重和大日志不在Git中；仅指标的CPU统计不能替代模型/输入轨迹的重新验收。
+本轮只通过CPU检查。已有SSH连接featurize-ist拒绝连接，未读取实验室GPU状态、未上传代码/数据、未修改原环境/归档；真实GPU小测待恢复授权可达连接后再做。
