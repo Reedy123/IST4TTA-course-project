@@ -66,7 +66,7 @@ python reproduce.py run --smoke --output ../smoke-2x2 --execute
 
 默认小测适应2批（256张原图，batch128、八视图保持不变），初始评估和最终评估各128张。`--max-batches 3 --eval-images 256`可显式调整小测。为避免原入口初始评估全部10000张，外部`adapt_smoke_entry.py`仅在内存中给唯一test_dataset加固定子集；适应流程/损失/更新不改文件。最终小测评估复用锁定的SharedViews、predict、state_hash函数，固定原索引0..N-1；不是论文完整准确率，也不与历史180/24组混合。
 
-其他空闲NVIDIA卡可验证功能，但记录实际硬件，`paper_hardware=false`时不能视为RTX3080论文效率复测。新入口未完成GPU验收，成功的CPU模拟不能称为复现成功。
+其他空闲NVIDIA卡可验证功能，但记录实际硬件，`paper_hardware=false`时不能视为RTX3080论文效率复测。新入口已完成[限定范围四模式GPU小测](GPU_SMOKE_ACCEPTANCE.md)，成功的CPU模拟本身不能称为GPU复现成功。
 
 ## 4. 完整适应与2×2
 
@@ -114,4 +114,4 @@ python reproduce.py summary --root ../full-2x2 --output ../full-summary
 - 新入口不关闭旧断言，而在独立锁定工作树之外提供包装。完整运行不用小测AST适配；小测改动明确记录，未声称与原正式执行逐位/耗时一致。
 - 旧README验证限制通过独立A工作树解决，发布README可完善但锁定README保持上游原字节。
 
-本轮只通过CPU检查。已有SSH连接featurize-ist拒绝连接，未读取实验室GPU状态、未上传代码/数据、未修改原环境/归档；真实GPU小测待恢复授权可达连接后再做。
+2026-11-21补充验收：33项CPU测试通过；授权连接恢复后，RTX 3080原环境完成四模式高斯噪声小测（适应256张、初始/最终各评估128张）。诊断后利用率采样尾迹的误拦截已由20db3a8新增工具修复，未改原环境/归档/锁定源码；未重跑正式实验，完整规模和新环境安装仍未验证。详见[验收记录](GPU_SMOKE_ACCEPTANCE.md)。
