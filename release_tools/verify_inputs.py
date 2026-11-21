@@ -11,6 +11,7 @@ def main():
     parser.add_argument('--repo', type=Path, required=True)
     parser.add_argument('--corruptions', nargs='+', help='默认核对全部15种扰动')
     args = parser.parse_args()
+    args.repo = args.repo.expanduser().resolve()
     try:
         proof = verify(args.repo)
         protocol = json.loads((MANIFESTS / 'formal-protocol.json').read_text())

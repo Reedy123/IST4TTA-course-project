@@ -30,3 +30,10 @@ id_rsa*
 id_ed25519*
 credentials*
 secrets*
+
+# 发布工作区的新输出和缓存只保留本地
+/outputs/
+/work/
+/runs/
+/checkpoints/
+/artifact-cache/
