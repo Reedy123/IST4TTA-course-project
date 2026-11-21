@@ -1,0 +1,9 @@
+GPU 联合验证通过
+GPU 联合验证通过
+torch 1.13.1+cu117
+torchvision 0.14.1+cu117
+numpy 1.23.5
+scipy 1.10.1
+timm 0.6.13
+NVIDIA GeForce RTX 3080 1.13.1+cu117 11.7
+环境验证通过；这里只测试合成数据，没有模型训练

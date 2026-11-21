@@ -1,18 +1,30 @@
-# 发布后新增工具（不是历史实验源码）
+# 独立复现工具
 
-以下脚本以Python标准库运行；不执行模型的路径无需安装torch/numpy。文件作用均在顶部及函数中文说明中标注。
+统一入口在仓库根：`python reproduce.py --help`。脚本全部以中文说明作用，默认不启动模型。路径由用户提供或按仓库相对位置计算；没有原服务器绝对路径。
 
-| 工具 | 默认行为 | 是否会运行模型 |
-|---|---|---|
-| verify_locked.py | 核对提交、114文件及92源码清单 | 否 |
-| verify_inputs.py | 只读核对数据/源权重摘要和干净数据文件存在性 | 否；需要自己准备输入 |
-| analyze_results.py | 从180/24指标JSON重新统计到新目录 | 否；原统计器导入链仅标准库 |
-| prepare_runs.py | 打印JSON命令计划，不创建实验输出 | 默认否；只有显式--execute才运行新GPU实验 |
+| 子命令/文件 | 作用与默认行为 |
+|---|---|
+| setup / setup_runtime.py | 从本地固定Git提交准备独立工作树、链接外部数据；拒绝覆盖 |
+| weights / fetch_weights.py | 从公开Git历史提取预训练权重到外部目录，SHA核验；不加载模型 |
+| install / install_environment.py | 默认打印新环境安装计划，--apply才安装；原环境路径存在即拒绝 |
+| check / doctor.py | 默认只读版本诊断；--require-gpu才检查微型联合算子，先检查GPU空闲 |
+| inputs / verify_inputs.py | 只读核对所选公开数据/源权重，干净数据完整性仍由官方加载器检查 |
+| run / prepare_runs.py | 默认打印新运行计划；--execute才运行，--smoke限制训练/评估范围 |
+| adapt_smoke_entry.py | 只给小测的初始test_dataset增加内存子集限制，锁定文件不修改 |
+| evaluate_subset.py | 小测最终限量评估，复用原评估函数，校验参数及BN不变 |
+| runtime_support.py | 指定设备空闲检查、半秒采样、数值/状态验证，不杀其他进程 |
+| summary / summarize_replication.py | 汇总完整的新运行结果，小测与历史正式数据不混合 |
+| stats / analyze_results.py | 继续支持对已公开小型180/24历史指标重算，不覆盖原记录 |
+| verify_locked.py / locked_source.py | 保留114文件、92源码、提交号及额外源码检查 |
 
-运行脚本时使用路径，例如`python3 /发布目录/release_tools/verify_locked.py --repo /锁定目录`，不要用`python -m release_tools...`。脚本通过自身位置查找发布清单；无需复制到锁定工作树。
+`prepare_runs.make_plan`保留既有API及--modes/--repo/--all-180，新增--mode别名、小测、评估规模、端口和设备。默认Python从当前sys.executable取得，保留虚拟环境符号链接，避免绕开用户已激活环境。--python仍可明确选择其他既有解释器。
 
-`analyze_results.py`要求完整180/24条记录，拒绝缺失/重复组、旧计时复用、缺少效率权重核验标记及已有输出目录；原正式统计器保持原数据精度和ddof=1。新统计目录中的PAPER_TABLES.md由历史统计器生成，包含当时的术语，仅供核验，不自动覆盖修订论文或作为新论文正文。
+小测适应2批、初始/最终各128张；完整运行保留原10000张流程。新包装没有旧16组依赖，也不冒用原总控所有等价审计/续跑证明。每次结果都记录锁定提交、工具摘要、实际命令、设备、样本数和是否小测。其他NVIDIA卡可做功能检查，不标成论文3080硬件。
 
-`prepare_runs.py`按原complete_protocol.schedule保留任务相对顺序，命令沿用锁定构造器；仅解释器路径和新输出位置由用户指定。固定八视图评估仍用原评估器的`--training_seed`参数，该历史参数名指适应随机种子。无--execute时不探测GPU、不读取数据/权重、不启动模型。显式执行只允许单张RTX3080，先核对所选数据/源权重SHA-256，每组独立适应、重新评估，失败立即停止并保留文件；不安装环境、不下载数据、不自动清理或续跑。
+CPU回归测试：
 
-包装产生`replication-results.json`和`plan.json`，明确标为新复现，不能当作原180组归档。它使用原适应监控器，但未复刻原总控全部等价检查和旧16组复用链；也未在GPU上验收，不宣称位级/耗时重现保证。不应将新的180组与这里的历史24组混成同一次实验。完整180组可用--all-180生成；生成计划不代表已执行180组。
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s release_tools/tests -v
+```
+
+测试包含真实的临时Git工作树及公开权重SHA，和明确标注的模拟子进程衔接；不导入torch/faiss，不安装环境、不访问GPU、不改原归档。模拟fixture不能作为真实GPU冒烟结果。未获得GPU运行结果之前，任何“CPU通过”都不代表模型复现成功。

@@ -1,0 +1,105 @@
+{
+  "interpretation": "历史不一致conda-list的关键版本与修复前清单相同；修复后清单/explicit与锁定conda-spec及GPU验证日志一致，正式复现采用修复后2021.4链。",
+  "before_versions": {
+    "cudatoolkit": {
+      "version": "11.4.1",
+      "build": "h8ab8bb3_9"
+    },
+    "faiss-gpu": {
+      "version": "1.7.4",
+      "build": "py3.10_hc0239a3_0_cuda11.4"
+    },
+    "intel-openmp": {
+      "version": "2023.1.0",
+      "build": "hdb19cb5_46306"
+    },
+    "libfaiss": {
+      "version": "1.7.4",
+      "build": "h13c3c6d_0_cuda11.4"
+    },
+    "mkl": {
+      "version": "2023.1.0",
+      "build": "h213fc3f_46344"
+    },
+    "numpy": {
+      "version": "1.23.5",
+      "build": "py310h5f9d8c6_1"
+    },
+    "pip": {
+      "version": "23.3.1",
+      "build": "py310h06a4308_0"
+    },
+    "python": {
+      "version": "3.10.13",
+      "build": "h955ad1f_0"
+    },
+    "scipy": {
+      "version": "1.10.1",
+      "build": "py310h5f9d8c6_1"
+    },
+    "torch": {
+      "version": "1.13.1+cu117",
+      "build": "pypi_0"
+    },
+    "torchvision": {
+      "version": "0.14.1+cu117",
+      "build": "pypi_0"
+    }
+  },
+  "after_versions": {
+    "cudatoolkit": {
+      "version": "11.4.1",
+      "build": "h8ab8bb3_9"
+    },
+    "faiss-gpu": {
+      "version": "1.7.4",
+      "build": "py3.10_hc0239a3_0_cuda11.4"
+    },
+    "intel-openmp": {
+      "version": "2021.4.0",
+      "build": "h06a4308_3561"
+    },
+    "libfaiss": {
+      "version": "1.7.4",
+      "build": "h13c3c6d_0_cuda11.4"
+    },
+    "mkl": {
+      "version": "2021.4.0",
+      "build": "h06a4308_640"
+    },
+    "numpy": {
+      "version": "1.23.5",
+      "build": "py310hd5efca6_0"
+    },
+    "pip": {
+      "version": "23.3.1",
+      "build": "py310h06a4308_0"
+    },
+    "python": {
+      "version": "3.10.13",
+      "build": "h955ad1f_0"
+    },
+    "scipy": {
+      "version": "1.10.1",
+      "build": "py310hd5efca6_0"
+    },
+    "torch": {
+      "version": "1.13.1+cu117",
+      "build": "pypi_0"
+    },
+    "torchvision": {
+      "version": "0.14.1+cu117",
+      "build": "pypi_0"
+    }
+  },
+  "torch_cuda_runtime": "11.7（正式verify-env日志）",
+  "faiss_conda_cudatoolkit": "11.4.1（修复后包清单）",
+  "evidence_sha256": {
+    "before-packages.json": "d537a9ea871edf943bcfce34edebb64659ec16d1010177acbc3bd369fbdf116e",
+    "after-packages.json": "394cdb3c484d5f553fc51def315859134a9a996a33379b5523f79acc3455fb56",
+    "after-explicit.txt": "da9cfa519cd13ec74f62933a3de03c10d73d40a785016d926b8cf5c12284dba9",
+    "verify-env.log": "487cb56a90520bbf2af539975c99e2f5d538b05fb54f25efd19f97f4643ea563"
+  },
+  "formal_scope": "证明修复后运行核心版本；不是所有时间点传递依赖绝对相同的保证。",
+  "new_environment_installation_tested": false
+}
